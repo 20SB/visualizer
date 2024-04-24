@@ -1,11 +1,11 @@
-import { Button } from "@chakra-ui/react";
+import { Button } from "@mantine/core";
 import "./App.css";
+import { Header } from "./components/Header";
 
 function App() {
     return (
         <div className="App">
-            Visualizer
-            <Button colorScheme="blue">Button</Button>
+            <Header />
         </div>
     );
 }

@@ -2,14 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <BrowserRouter>
-        <ChakraProvider>
+        <MantineProvider defaultColorScheme="dark">
             <App />
-        </ChakraProvider>
+        </MantineProvider>
     </BrowserRouter>
 );
