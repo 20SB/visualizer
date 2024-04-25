@@ -33,87 +33,183 @@ import {
     IconArrowsLeftRight,
 } from "@tabler/icons-react";
 import classes from "./Header.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export function Header() {
-    const topicsData = [
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const [data, setData] = useState([]);
+    const [showItem, setShowItem] = useState(false);
+    const [showSubItem, setShowSubItem] = useState(false);
+    const [subTopics, setSubTopics] = useState([]);
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+
+    useEffect(() => {
+        const getData = () => {
+            axios.get(`${BACKEND_URL}/data`).then(({ data }) => {
+                data = data.slice(0, 50);
+                console.log("data", data);
+                setData(data);
+            });
+        };
+        getData();
+    }, []);
+
+    // Function to extract distinct values from an array of objects based on a specified key
+    const extractDistinctValues = (dataArray, key) => {
+        const distinctValues = new Set(); // Using a Set to ensure uniqueness
+
+        // Iterate through each object in the array
+        dataArray.forEach((obj) => {
+            if (obj[key] !== null && obj[key] !== undefined) {
+                distinctValues.add(obj[key]); // Add the value to the set
+            }
+        });
+
+        return Array.from(distinctValues); // Convert the Set to an array
+    };
+
+    // Organize the result in the specified format
+    const topics = [
         {
-            label: "Frontend Frameworks",
-            options: ["React", "Angular", "Vue", "Svelte"],
+            category: "Countries",
+            subtopics: extractDistinctValues(data, "country"),
         },
         {
-            label: "Backend Frameworks",
-            options: ["Express.js", "Django", "Spring Boot", "Laravel"],
+            category: "End Years",
+            subtopics: extractDistinctValues(data, "end_year"),
         },
         {
-            label: "Programming Languages",
-            options: ["JavaScript", "Python", "Java", "PHP"],
+            category: "Source",
+            subtopics: extractDistinctValues(data, "source"),
+        },
+        {
+            category: "Region ",
+            subtopics: extractDistinctValues(data, "region"),
+        },
+        {
+            category: "Sector",
+            subtopics: extractDistinctValues(data, "sector"),
+        },
+        {
+            category: "Topics",
+            subtopics: extractDistinctValues(data, "topic"),
+        },
+        {
+            category: "PEST",
+            subtopics: extractDistinctValues(data, "pestle"),
         },
     ];
 
-    const [selectedTopics, setSelectedTopics] = useState([]);
+    console.log("topics", topics);
 
-    // Handle change function to update selected topics
-    const handleChange = (values) => {
-        setSelectedTopics(values);
+    const handleItemClick = (index, category) => {
+        const foundCategory = topics.find((item) => item.category === category);
+        console.log("foundCategory", foundCategory);
+        setSubTopics(foundCategory.subtopics);
+        if (index === selectedIndex) {
+            setShowSubItem(!showSubItem);
+        } else {
+            setShowSubItem(true);
+        }
+        setSelectedIndex(index);
     };
+    console.log();
 
-    // Flatten topicsData to prepare for use in Select component
-    const flattenedOptions = topicsData.flatMap((topic) =>
-        topic.options.map((option) => ({
-            label: `${topic.label} - ${option}`, // Combine topic label and option
-            value: option.toLowerCase().replace(/\s+/g, "-"), // Format value (e.g., "react")
-        }))
-    );
+    const handleItemHover = (index) => {
+        setHoveredIndex(index); // Set the hovered index
+    };
 
     return (
         <Box p={10} bg={"black"}>
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <MantineLogo size={30} />
-                    <Menu>
-                        <Menu.Target>
-                            <Button>Filter</Button>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                            <Menu.Item>
-                                <Menu>
-                                    <Menu.Target>
-                                        <Text>Fruits</Text>
-                                    </Menu.Target>
-                                    <Menu.Dropdown>
-                                        <Menu.Item>Apples</Menu.Item>
-                                        <Menu.Item>Oranges</Menu.Item>
-                                        <Menu.Item>Bananas</Menu.Item>
-                                    </Menu.Dropdown>
-                                </Menu>
-                            </Menu.Item>
-                            <Menu.Item>
-                                <Menu>
-                                    <Menu.Target>
-                                        <Text>Vegetables</Text>
-                                    </Menu.Target>
-                                    <Menu.Dropdown>
-                                        <Menu.Item>Tomatoes</Menu.Item>
-                                        <Menu.Item>Carrots</Menu.Item>
-                                        <Menu.Item>Lettuce</Menu.Item>
-                                    </Menu.Dropdown>
-                                </Menu>
-                            </Menu.Item>
-                            <Menu.Item>
-                                <Menu>
-                                    <Menu.Target>
-                                        <Text>Animals</Text>
-                                    </Menu.Target>
-                                    <Menu.Dropdown>
-                                        <Menu.Item>Mammals</Menu.Item>
-                                        <Menu.Item>Birds</Menu.Item>
-                                        <Menu.Item>Reptiles</Menu.Item>
-                                    </Menu.Dropdown>
-                                </Menu>
-                            </Menu.Item>
-                        </Menu.Dropdown>
-                    </Menu>
+                    <div style={{ position: "relative" }}>
+                        <Button
+                            onClick={() => {
+                                setShowItem(!showItem);
+                                setShowSubItem(false);
+                            }}
+                        >
+                            Filter
+                        </Button>
+                        {showItem && (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    position: "absolute",
+                                    width: "100px",
+                                    background: "white",
+                                    top: "110%",
+                                    borderRadius: "4px",
+                                    padding: "4px",
+                                    boxSizing: "border-box",
+                                }}
+                            >
+                                {topics.map((item, index) => (
+                                    <Text
+                                        key={index}
+                                        className="filterBtn"
+                                        style={{
+                                            cursor: "pointer",
+                                            color: "black",
+                                            padding: "3px 10px",
+                                            width: "100%",
+                                            borderRadius: "4px",
+                                            backgroundColor:
+                                                selectedIndex === index
+                                                    ? "#dbdbdb"
+                                                    : hoveredIndex === index
+                                                    ? "#f1eded96"
+                                                    : "transparent",
+                                        }}
+                                        onClick={() => handleItemClick(index, item.category)}
+                                        onMouseEnter={() => handleItemHover(index)}
+                                        onMouseLeave={() => handleItemHover(null)}
+                                    >
+                                        {item.category}
+                                    </Text>
+                                ))}
+                            </div>
+                        )}
+                        {showSubItem && (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    width: "250px",
+                                    right: "-283px",
+                                    background: "white",
+                                    top: "110%",
+                                    borderRadius: "4px",
+                                    padding: "4px",
+                                    boxSizing: "border-box",
+                                    maxHeight: "90vh",
+                                    overflowY: "auto",
+                                }}
+                            >
+                                {Array.isArray(subTopics) &&
+                                    subTopics.length > 0 &&
+                                    subTopics.map((item, index) => (
+                                        <Text
+                                            key={index}
+                                            className="filterBtn"
+                                            style={{
+                                                cursor: "pointer",
+                                                color: "black",
+                                                padding: "3px 10px",
+                                                width: "100%",
+                                                borderRadius: "4px",
+                                            }}
+                                        >
+                                            {item}
+                                        </Text>
+                                    ))}
+                            </div>
+                        )}
+                    </div>
 
                     <Menu shadow="md" width={200} position="bottom-start" offset={10}>
                         <Menu.Target>
