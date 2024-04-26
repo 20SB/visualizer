@@ -1,29 +1,6 @@
-import {
-    Group,
-    UnstyledButton,
-    Text,
-    ThemeIcon,
-    Divider,
-    Box,
-    Burger,
-    Drawer,
-    ScrollArea,
-    rem,
-    useMantineTheme,
-    Avatar,
-    Menu,
-    Select,
-    Button,
-} from "@mantine/core";
+import { Group, Text, Box, rem, Avatar, Menu, Button } from "@mantine/core";
 import { MantineLogo } from "@mantinex/mantine-logo";
-import { useDisclosure } from "@mantine/hooks";
 import {
-    IconNotification,
-    IconCode,
-    IconBook,
-    IconChartPie3,
-    IconFingerprint,
-    IconCoin,
     IconChevronLeft,
     IconSettings,
     IconSearch,
@@ -36,7 +13,7 @@ import classes from "./Header.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export function Header() {
+export function Header({ setFilteredData, extractDistinctValues }) {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const [data, setData] = useState([]);
     const [showItem, setShowItem] = useState(false);
@@ -44,11 +21,14 @@ export function Header() {
     const [subTopics, setSubTopics] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [selectedKey, setSelectedKey] = useState("");
+    const [selectedValue, setSelectedValue] = useState("");
 
     useEffect(() => {
+        // function for fetching data
         const getData = () => {
             axios.get(`${BACKEND_URL}/data`).then(({ data }) => {
-                data = data.slice(0, 50);
+                // data = data.slice(0, 50);
                 console.log("data", data);
                 setData(data);
             });
@@ -56,53 +36,44 @@ export function Header() {
         getData();
     }, []);
 
-    // Function to extract distinct values from an array of objects based on a specified key
-    const extractDistinctValues = (dataArray, key) => {
-        const distinctValues = new Set(); // Using a Set to ensure uniqueness
-
-        // Iterate through each object in the array
-        dataArray.forEach((obj) => {
-            if (obj[key] !== null && obj[key] !== undefined) {
-                distinctValues.add(obj[key]); // Add the value to the set
-            }
-        });
-
-        return Array.from(distinctValues); // Convert the Set to an array
-    };
-
     // Organize the result in the specified format
     const topics = [
         {
             category: "Countries",
+            key: "country",
             subtopics: extractDistinctValues(data, "country"),
         },
         {
             category: "End Years",
+            key: "end_year",
             subtopics: extractDistinctValues(data, "end_year"),
         },
         {
             category: "Source",
+            key: "source",
             subtopics: extractDistinctValues(data, "source"),
         },
         {
             category: "Region ",
+            key: "region",
             subtopics: extractDistinctValues(data, "region"),
         },
         {
             category: "Sector",
+            key: "sector",
             subtopics: extractDistinctValues(data, "sector"),
         },
         {
             category: "Topics",
+            key: "topic",
             subtopics: extractDistinctValues(data, "topic"),
         },
         {
             category: "PEST",
+            key: "pestle",
             subtopics: extractDistinctValues(data, "pestle"),
         },
     ];
-
-    console.log("topics", topics);
 
     const handleItemClick = (index, category) => {
         const foundCategory = topics.find((item) => item.category === category);
@@ -114,11 +85,27 @@ export function Header() {
             setShowSubItem(true);
         }
         setSelectedIndex(index);
+        setSelectedKey(foundCategory.key);
     };
-    console.log();
 
+    // handle hover function
     const handleItemHover = (index) => {
-        setHoveredIndex(index); // Set the hovered index
+        setHoveredIndex(index);
+    };
+
+    // Handle filter function
+    const handleFilterFunc = (choosenValue) => {
+        const currFilteredData = data.filter((item) => item[selectedKey] === choosenValue);
+        setFilteredData(currFilteredData);
+
+        setSelectedValue(choosenValue);
+        setShowItem(false);
+        setShowSubItem(false);
+    };
+
+    // Capitalize First letter of string
+    const capitalizeFirstLetter = (str) => {
+        return str.toLowerCase().replace(/(^|\s)\S/g, (match) => match.toUpperCase());
     };
 
     return (
@@ -133,8 +120,30 @@ export function Header() {
                                 setShowSubItem(false);
                             }}
                         >
-                            Filter
+                            Filter Data
                         </Button>
+                        <div
+                            style={{
+                                position: "absolute",
+                                left: "110px",
+                                top: "0px",
+                                gap: "10px",
+                                width: "350px",
+                            }}
+                        >
+                            {selectedKey && (
+                                <Text size="xs" align="left">
+                                    {capitalizeFirstLetter(selectedKey)}
+                                    {" >"}
+                                </Text>
+                            )}
+                            {selectedValue && (
+                                <Text size="xs" align="left">
+                                    {selectedValue}
+                                </Text>
+                            )}
+                        </div>
+
                         {showItem && (
                             <div
                                 style={{
@@ -147,6 +156,7 @@ export function Header() {
                                     borderRadius: "4px",
                                     padding: "4px",
                                     boxSizing: "border-box",
+                                    zIndex: "9999",
                                 }}
                             >
                                 {topics.map((item, index) => (
@@ -161,9 +171,9 @@ export function Header() {
                                             borderRadius: "4px",
                                             backgroundColor:
                                                 selectedIndex === index
-                                                    ? "#dbdbdb"
+                                                    ? "rgb(94 206 229)"
                                                     : hoveredIndex === index
-                                                    ? "#f1eded96"
+                                                    ? "rgb(194 226 255)"
                                                     : "transparent",
                                         }}
                                         onClick={() => handleItemClick(index, item.category)}
@@ -180,7 +190,7 @@ export function Header() {
                                 style={{
                                     position: "absolute",
                                     width: "250px",
-                                    right: "-283px",
+                                    right: "-250px",
                                     background: "white",
                                     top: "110%",
                                     borderRadius: "4px",
@@ -188,6 +198,7 @@ export function Header() {
                                     boxSizing: "border-box",
                                     maxHeight: "90vh",
                                     overflowY: "auto",
+                                    zIndex: "9999",
                                 }}
                             >
                                 {Array.isArray(subTopics) &&
@@ -202,6 +213,9 @@ export function Header() {
                                                 padding: "3px 10px",
                                                 width: "100%",
                                                 borderRadius: "4px",
+                                            }}
+                                            onClick={(e) => {
+                                                handleFilterFunc(e.target.innerHTML);
                                             }}
                                         >
                                             {item}

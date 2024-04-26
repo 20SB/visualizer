@@ -1,3 +1,16 @@
 .filterBtn:hover {
-    background-color: #f1eded96;
+    background-color: rgb(194 226 255);
+}
+.recharts-tooltip-wrapper {
+    background-color: rgb(2, 2, 2) !important;
+    padding: 4px 10px !important;
+    border-radius: 5px !important;
+}
+.mantine-ChartTooltip-tooltipBody div {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px;
+}
+.App {
+    overflow-x: hidden;
 }
