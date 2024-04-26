@@ -12,6 +12,7 @@ import {
 import classes from "./Header.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import logo from "../logo.png";
 
 export function Header({ setFilteredData, extractDistinctValues }) {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -112,7 +113,17 @@ export function Header({ setFilteredData, extractDistinctValues }) {
         <Box p={10} bg={"black"}>
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
-                    <MantineLogo size={30} />
+                    <div style={{ display: "flex", gap: "10px" }}>
+                        <Avatar src={logo} alt="it's me" />
+                        <Text
+                            size="xl"
+                            fw={900}
+                            variant="gradient"
+                            gradient={{ from: "#68FA9F", to: "#DAFF4C", deg: 251 }}
+                        >
+                            VISUALIZER
+                        </Text>
+                    </div>
                     <div style={{ position: "relative" }}>
                         <Button
                             onClick={() => {

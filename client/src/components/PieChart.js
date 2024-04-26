@@ -7,6 +7,7 @@ export const PieChartComp = ({ data }) => {
             labelsPosition="outside"
             labelsType="value"
             withLabels
+            withTooltip
             data={data}
             h={220}
         />
