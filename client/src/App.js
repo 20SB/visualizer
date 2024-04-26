@@ -92,7 +92,7 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "30%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
                         padding: "10px 10px",
@@ -113,10 +113,10 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "30%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
-                        padding: "0px 10px",
+                        padding: "10px 10px",
                     }}
                 >
                     <Text align="center" style={{ fontWeight: "600" }}>
@@ -133,10 +133,10 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "30%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
-                        padding: "0px 10px",
+                        padding: "10px 10px",
                     }}
                 >
                     <Text align="center" style={{ fontWeight: "600" }}>
@@ -152,10 +152,10 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "15%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
-                        padding: "0px 10px",
+                        padding: "10px 10px",
                     }}
                 >
                     <Text align="center" style={{ fontWeight: "600" }}>
@@ -167,10 +167,10 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "15%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
-                        padding: "0px 10px",
+                        padding: "10px 10px",
                     }}
                 >
                     <Text align="center" style={{ fontWeight: "600" }}>
@@ -182,10 +182,10 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "15%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
-                        padding: "0px 10px",
+                        padding: "10px 10px",
                     }}
                 >
                     <Text align="center" style={{ fontWeight: "600" }}>
@@ -197,10 +197,10 @@ function App() {
                     style={{
                         background: "#313131",
                         width: "15%",
-                        height: "250px",
+                        height: "260px",
                         flexGrow: 1,
                         borderRadius: "5px",
-                        padding: "0px 10px",
+                        padding: "10px 10px",
                     }}
                 >
                     <Text align="center" style={{ fontWeight: "600" }}>

@@ -21,16 +21,16 @@ export function Header({ setFilteredData, extractDistinctValues }) {
     const [subTopics, setSubTopics] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [hoveredIndex, setHoveredIndex] = useState(null);
-    const [selectedKey, setSelectedKey] = useState("");
-    const [selectedValue, setSelectedValue] = useState("");
+    const [selectedKey, setSelectedKey] = useState("country");
+    const [selectedValue, setSelectedValue] = useState("United States of America");
 
     useEffect(() => {
         // function for fetching data
         const getData = () => {
             axios.get(`${BACKEND_URL}/data`).then(({ data }) => {
                 // data = data.slice(0, 50);
-                console.log("data", data);
                 setData(data);
+                handleFilterFunc(data, "United States of America");
             });
         };
         getData();
@@ -75,9 +75,9 @@ export function Header({ setFilteredData, extractDistinctValues }) {
         },
     ];
 
+    // handle topic item click
     const handleItemClick = (index, category) => {
         const foundCategory = topics.find((item) => item.category === category);
-        console.log("foundCategory", foundCategory);
         setSubTopics(foundCategory.subtopics);
         if (index === selectedIndex) {
             setShowSubItem(!showSubItem);
@@ -94,8 +94,8 @@ export function Header({ setFilteredData, extractDistinctValues }) {
     };
 
     // Handle filter function
-    const handleFilterFunc = (choosenValue) => {
-        const currFilteredData = data.filter((item) => item[selectedKey] === choosenValue);
+    const handleFilterFunc = (allData, choosenValue) => {
+        const currFilteredData = allData.filter((item) => item[selectedKey] === choosenValue);
         setFilteredData(currFilteredData);
 
         setSelectedValue(choosenValue);
@@ -215,7 +215,7 @@ export function Header({ setFilteredData, extractDistinctValues }) {
                                                 borderRadius: "4px",
                                             }}
                                             onClick={(e) => {
-                                                handleFilterFunc(e.target.innerHTML);
+                                                handleFilterFunc(data, e.target.innerHTML);
                                             }}
                                         >
                                             {item}
